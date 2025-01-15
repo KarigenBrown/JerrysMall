@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Backend.Controllers;
 
 [ApiController]
-[Route("/api/[controller]")]
+[Route("/backend/[controller]")]
 public class ProductsController(StoreContext context) : ControllerBase
 {
     [HttpGet]
