@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Backend.Controllers;
 
 [ApiController]
-[Route("/backend/[controller]")]
+[Route("/Backend/[controller]/")]
 public class ProductsController(StoreContext context) : ControllerBase
 {
     [HttpGet]
@@ -16,7 +16,7 @@ public class ProductsController(StoreContext context) : ControllerBase
         return await context.Products.ToListAsync();
     }
 
-    [HttpGet("/{id}")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
         return await context.Products.FindAsync(id) ?? throw new InvalidOperationException();
