@@ -1,6 +1,6 @@
 import {createBrowserRouter} from "react-router-dom";
 import App from "../layout/App.tsx";
-import {HomePage} from "../../features/Home/HomePage.tsx";
+import {HomePage} from "../../features/home/HomePage.tsx";
 import Catalog from "../../features/catalog/Catalog.tsx";
 import {ProductDetails} from "../../features/catalog/ProductDetails.tsx";
 import {AboutPage} from "../../features/about/AboutPage.tsx";

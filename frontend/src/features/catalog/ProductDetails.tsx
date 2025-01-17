@@ -1,8 +1,8 @@
 import {Divider, Grid2, Table, TableBody, TableCell, TableContainer, TableRow, Typography} from "@mui/material";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import axios from "axios";
 import {Product} from "../../app/models/Product.ts";
+import agent from "../../app/api/agent.ts";
 
 export function ProductDetails() {
     const {id} = useParams<{ id: string }>()
@@ -10,9 +10,9 @@ export function ProductDetails() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/Backend/Products/${id}`)
-            .then(response => setProduct(response.data))
-            .catch(error => console.log(error))
+        agent.Catalog.detail(parseInt(id!))
+            .then(response => setProduct(response))
+            .catch(error => console.log(error.response))
             .finally(() => setLoading(false))
     }, [id])
 
@@ -33,32 +33,32 @@ export function ProductDetails() {
                 <Typography variant="h3">{product.name}</Typography>
                 <Divider sx={{mb: 2}}/>
                 <Typography variant="h4" color="secondary">${(product.price / 100).toFixed(2)}</Typography>
-            <TableContainer>
-                <Table>
-                    <TableBody>
-                        <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell>{product.name}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Description</TableCell>
-                            <TableCell>{product.description}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Type</TableCell>
-                            <TableCell>{product.type}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Brand</TableCell>
-                            <TableCell>{product.brand}</TableCell>
-                        </TableRow>
-                        <TableRow>
-                            <TableCell>Quantity in stock</TableCell>
-                            <TableCell>{product.quantityInStock}</TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                <TableContainer>
+                    <Table>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell>Name</TableCell>
+                                <TableCell>{product.name}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Description</TableCell>
+                                <TableCell>{product.description}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Type</TableCell>
+                                <TableCell>{product.type}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Brand</TableCell>
+                                <TableCell>{product.brand}</TableCell>
+                            </TableRow>
+                            <TableRow>
+                                <TableCell>Quantity in stock</TableCell>
+                                <TableCell>{product.quantityInStock}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Grid2>
         </Grid2>
     )
