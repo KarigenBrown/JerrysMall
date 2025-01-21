@@ -3,6 +3,8 @@ import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {Product} from "../../app/models/Product.ts";
 import agent from "../../app/api/agent.ts";
+import NotFound from "../../app/error/NotFound.tsx";
+import LoadingComponent from "../../app/layout/LoadingComponent.tsx";
 
 export function ProductDetails() {
     const {id} = useParams<{ id: string }>()
@@ -12,16 +14,16 @@ export function ProductDetails() {
     useEffect(() => {
         agent.Catalog.detail(parseInt(id!))
             .then(response => setProduct(response))
-            .catch(error => console.log(error.response))
+            .catch(error => console.log(error))
             .finally(() => setLoading(false))
     }, [id])
 
     if (loading) {
-        return <h3>Loading..</h3>
+        return <LoadingComponent message="Loading product..."/>
     }
 
     if (!product) {
-        return <h3>Product not found</h3>
+        return <NotFound/>
     }
 
     return (
