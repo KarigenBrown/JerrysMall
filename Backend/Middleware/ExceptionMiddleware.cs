@@ -4,7 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Middleware;
 
-public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
+public class ExceptionMiddleware(
+    RequestDelegate next,
+    ILogger<ExceptionMiddleware> logger,
+    IHostEnvironment env) //: IMiddleware
 {
     public async Task InvokeAsync(HttpContext context)
     {
@@ -21,7 +24,7 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
             var response = new ProblemDetails
             {
                 Status = StatusCodes.Status500InternalServerError,
-                Detail = env.IsDevelopment() ? ex.StackTrace?.ToString() : null,
+                Detail = env.IsDevelopment() ? ex.StackTrace : null,
                 Title = ex.Message
             };
 
