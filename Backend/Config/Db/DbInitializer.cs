@@ -1,6 +1,6 @@
-﻿using Backend.Domains.Entities;
+﻿using Backend.Domain.Entity;
 
-namespace Backend.Data;
+namespace Backend.Config.Db;
 
 public static class DbInitializer
 {

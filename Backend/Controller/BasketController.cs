@@ -1,17 +1,17 @@
-﻿using Backend.Data;
-using Backend.Domains.DTOs;
-using Backend.Domains.Entities;
+﻿using Backend.Config.Db;
+using Backend.Domain.Vo;
+using Backend.Domain.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Controllers;
+namespace Backend.Controller;
 
-public class BasketController(StoreContext context) : BaseBackendController
+public class BasketController(StoreContext context) : BackendController
 {
     private const string CookieKey = "buyerId";
 
     [HttpGet(Name = "GetBasket")]
-    public async Task<ActionResult<BasketDto>> GetBasket()
+    public async Task<ActionResult<BasketVo>> GetBasket()
     {
         var basket = await RetrieveBasket();
 
@@ -20,11 +20,11 @@ public class BasketController(StoreContext context) : BaseBackendController
             return NotFound();
         }
 
-        return MapBasketToDto(basket);
+        return MapBasketToVo(basket);
     }
 
     [HttpPost] // /Backend/Basket?productId=3&quantity=2
-    public async Task<ActionResult<BasketDto>> AddItemToBasket(int productId, int quantity)
+    public async Task<ActionResult<BasketVo>> AddItemToBasket(int productId, int quantity)
     {
         var basket = await RetrieveBasket();
         basket ??= await CreateBasket();
@@ -37,7 +37,7 @@ public class BasketController(StoreContext context) : BaseBackendController
         basket.AddItem(product, quantity);
         var result = await context.SaveChangesAsync() > 0;
         return result
-            ? CreatedAtRoute("GetBasket", MapBasketToDto(basket))
+            ? CreatedAtRoute("GetBasket", MapBasketToVo(basket))
             : BadRequest(new ProblemDetails
             {
                 Title = "Problem saving item to basket"
@@ -88,13 +88,13 @@ public class BasketController(StoreContext context) : BaseBackendController
         return basket;
     }
 
-    private BasketDto MapBasketToDto(Basket basket)
+    private BasketVo MapBasketToVo(Basket basket)
     {
-        return new BasketDto
+        return new BasketVo
         {
             Id = basket.Id,
             BuyerId = basket.BuyerId,
-            Items = basket.Items.Select(item => new BasketItemDto
+            Items = basket.Items.Select(item => new BasketItemVo
             {
                 ProductId = item.ProductId,
                 Name = item.Product.Name,

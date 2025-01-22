@@ -1,4 +1,4 @@
-﻿namespace Backend.Domains.Entities;
+﻿namespace Backend.Domain.Entity;
 
 public class WeatherForecast
 {

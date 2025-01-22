@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.Controllers;
+namespace Backend.Controller;
 
-public class BugController : BaseBackendController
+public class BugController : BackendController
 {
     [HttpGet("not-found")]
     public ActionResult GetNotFound()

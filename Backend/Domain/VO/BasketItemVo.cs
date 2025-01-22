@@ -1,6 +1,6 @@
-﻿namespace Backend.Domains.DTOs;
+﻿namespace Backend.Domain.Vo;
 
-public class BasketItemDto
+public class BasketItemVo
 {
     public int ProductId { get; set; }
     public required string Name { get; set; }

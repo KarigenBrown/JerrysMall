@@ -1,11 +1,11 @@
-﻿using Backend.Data;
-using Backend.Domains.Entities;
+﻿using Backend.Config.Db;
+using Backend.Domain.Entity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Controllers;
+namespace Backend.Controller;
 
-public class ProductsController(StoreContext context) : BaseBackendController
+public class ProductsController(StoreContext context) : BackendController
 {
     [HttpGet]
     public async Task<ActionResult<List<Product>>> GetProducts()

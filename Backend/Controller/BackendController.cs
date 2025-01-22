@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.Controllers;
+namespace Backend.Controller;
 
 [ApiController]
 [Route("/Backend/[controller]/")]
-public class BaseBackendController : ControllerBase
+public class BackendController : ControllerBase
 {
 }

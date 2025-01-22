@@ -1,7 +1,7 @@
-﻿using Backend.Domains.Entities;
+﻿using Backend.Domain.Entity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Backend.Controllers;
+namespace Backend.Controller;
 
 [ApiController]
 [Route("[controller]")]
