@@ -13,7 +13,7 @@ public class ProductsController(StoreContext context) : BackendController
         return await context.Products.ToListAsync();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
         var product = await context.Products.FindAsync(id);

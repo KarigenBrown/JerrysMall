@@ -1,4 +1,4 @@
-import {Product} from "../../app/models/Product.ts";
+import {Product} from "../../app/model/product.ts";
 import ProductList from "./ProductList.tsx";
 import {useEffect, useState} from "react";
 import agent from "../../app/api/agent.ts";

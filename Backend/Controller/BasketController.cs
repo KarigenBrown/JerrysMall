@@ -88,7 +88,7 @@ public class BasketController(StoreContext context) : BackendController
         return basket;
     }
 
-    private BasketVo MapBasketToVo(Basket basket)
+    private static BasketVo MapBasketToVo(Basket basket)
     {
         return new BasketVo
         {
@@ -98,6 +98,7 @@ public class BasketController(StoreContext context) : BackendController
             {
                 ProductId = item.ProductId,
                 Name = item.Product.Name,
+                Price = item.Product.Price,
                 PictureUrl = item.Product.PictureUrl,
                 Type = item.Product.Type,
                 Brand = item.Product.Brand,

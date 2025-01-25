@@ -1,5 +1,5 @@
 import {Grid2} from "@mui/material";
-import {Product} from "../../app/models/Product.ts";
+import {Product} from "../../app/model/product.ts";
 import ProductCard from "./ProductCard.tsx";
 
 interface Props {

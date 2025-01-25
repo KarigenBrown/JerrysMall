@@ -1,7 +1,7 @@
 import {Divider, Grid2, Table, TableBody, TableCell, TableContainer, TableRow, Typography} from "@mui/material";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {Product} from "../../app/models/Product.ts";
+import {Product} from "../../app/model/product.ts";
 import agent from "../../app/api/agent.ts";
 import NotFound from "../../app/error/NotFound.tsx";
 import LoadingComponent from "../../app/layout/LoadingComponent.tsx";

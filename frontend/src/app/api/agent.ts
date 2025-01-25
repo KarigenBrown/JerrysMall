@@ -5,6 +5,7 @@ import {router} from "../router/Routes.tsx";
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500))
 
 axios.defaults.baseURL = "http://localhost:5000/Backend"
+axios.defaults.withCredentials = true
 
 const responseBody = (response: AxiosResponse) => response.data;
 
@@ -58,9 +59,16 @@ const TestErrors = {
     getValidationError: () => requests.get("/Bug/validation-error"),
 }
 
+const Basket = {
+    get: () => requests.get("/Basket"),
+    addItem: (productId: number, quantity = 1) => requests.post(`/Basket?productId=${productId}&quantity=${quantity}`, {}),
+    removeItem: (productId: number, quantity = 1) => requests.delete(`/Basket?productId=${productId}&quantity=${quantity}`)
+}
+
 const agent = {
     Catalog,
     TestErrors,
+    Basket,
 }
 
 export default agent;
