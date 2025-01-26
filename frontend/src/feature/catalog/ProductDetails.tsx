@@ -16,15 +16,17 @@ import {Product} from "../../app/model/product.ts";
 import agent from "../../app/api/agent.ts";
 import NotFound from "../../app/error/NotFound.tsx";
 import LoadingComponent from "../../app/layout/LoadingComponent.tsx";
-import {useStoreContext} from "../../app/context/StoreContext.tsx";
+import {useAppDispatch, useAppSelector} from "../../app/store/configureStore.ts";
+import {addBasketItemAsync, removeBasketItemAsync} from "../basket/basketSlice.ts";
+import {currencyFormat} from "../../app/util/util.ts";
 
 export function ProductDetails() {
-    const {basket, setBasket, removeItem} = useStoreContext()
+    const {basket, status} = useAppSelector(state => state.basket)
+    const dispatch = useAppDispatch()
     const {id} = useParams<{ id: string }>()
     const [product, setProduct] = useState<Product | null>(null)
     const [loading, setLoading] = useState(true)
     const [quantity, setQuantity] = useState(0)
-    const [submitting, setSubmitting] = useState(false)
     const item = basket?.items.find(i => i.productId === product?.id)
 
     useEffect(() => {
@@ -48,19 +50,12 @@ export function ProductDetails() {
             return
         }
 
-        setSubmitting(true)
         if (!item || quantity > item.quantity) {
             const updatedQuantity = item ? quantity - item.quantity : quantity
-            agent.Basket.addItem(product.id, updatedQuantity)
-                .then(basket => setBasket(basket))
-                .catch(error => console.log(error))
-                .finally(() => setSubmitting(false))
+            dispatch(addBasketItemAsync({productId: product.id, quantity: updatedQuantity}))
         } else {
             const updatedQuantity = item.quantity - quantity
-            agent.Basket.removeItem(product.id, updatedQuantity)
-                .then(() => removeItem(product.id, updatedQuantity))
-                .catch(error => console.log(error))
-                .finally(() => setSubmitting(false))
+            dispatch(removeBasketItemAsync({productId: product.id, quantity: updatedQuantity}))
         }
     }
 
@@ -80,7 +75,7 @@ export function ProductDetails() {
             <Grid2 size={6}>
                 <Typography variant="h3">{product.name}</Typography>
                 <Divider sx={{mb: 2}}/>
-                <Typography variant="h4" color="secondary">${(product.price / 100).toFixed(2)}</Typography>
+                <Typography variant="h4" color="secondary">{currencyFormat(product.price)}</Typography>
                 <TableContainer>
                     <Table>
                         <TableBody>
@@ -121,7 +116,7 @@ export function ProductDetails() {
                     <Grid2 size={6}>
                         <Button
                             disabled={(item?.quantity === quantity) || (!item && quantity === 0)}
-                            loading={submitting}
+                            loading={status === "pendingRemoveItem" + item?.productId}
                             onClick={handleUpdateCart}
                             sx={{height: "55px"}}
                             color="primary"

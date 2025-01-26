@@ -1,7 +1,7 @@
 import {AppBar, Badge, Box, IconButton, List, ListItem, Switch, Toolbar, Typography} from "@mui/material";
 import {NavLink, Link} from "react-router-dom";
 import {ShoppingCart} from "@mui/icons-material";
-import {useStoreContext} from "../context/StoreContext.tsx";
+import {useAppSelector} from "../store/configureStore.ts";
 
 interface PageLink {
     title: string,
@@ -37,7 +37,7 @@ const navStyles = {
 }
 
 export default function Header({darkMode, handleThemeChange}: Props) {
-    const {basket} = useStoreContext()
+    const {basket} = useAppSelector(state => state.basket)
     const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0)
 
     return (
