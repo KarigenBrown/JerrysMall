@@ -12,20 +12,19 @@ import {
 } from "@mui/material";
 import {useParams} from "react-router-dom";
 import {ChangeEvent, useEffect, useState} from "react";
-import {Product} from "../../app/model/product.ts";
-import agent from "../../app/api/agent.ts";
 import NotFound from "../../app/error/NotFound.tsx";
 import LoadingComponent from "../../app/layout/LoadingComponent.tsx";
 import {useAppDispatch, useAppSelector} from "../../app/store/configureStore.ts";
 import {addBasketItemAsync, removeBasketItemAsync} from "../basket/basketSlice.ts";
 import {currencyFormat} from "../../app/util/util.ts";
+import {fetchProductByIdAsync, productSelectors} from "./catalogSlice.ts";
 
 export function ProductDetails() {
     const {basket, status} = useAppSelector(state => state.basket)
     const dispatch = useAppDispatch()
     const {id} = useParams<{ id: string }>()
-    const [product, setProduct] = useState<Product | null>(null)
-    const [loading, setLoading] = useState(true)
+    const product = useAppSelector(state => productSelectors.selectById(state, parseInt(id!)))
+    const {status: productStatus} = useAppSelector(state => state.catalog)
     const [quantity, setQuantity] = useState(0)
     const item = basket?.items.find(i => i.productId === product?.id)
 
@@ -33,11 +32,10 @@ export function ProductDetails() {
         if (item) {
             setQuantity(item.quantity)
         }
-        agent.Catalog.detail(parseInt(id!))
-            .then(response => setProduct(response))
-            .catch(error => console.log(error))
-            .finally(() => setLoading(false))
-    }, [id, item])
+        if (!product) {
+            dispatch(fetchProductByIdAsync(parseInt(id!)))
+        }
+    }, [id, item, dispatch, product])
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement>) {
         if (parseInt(event.currentTarget.value) >= 0) {
@@ -59,7 +57,7 @@ export function ProductDetails() {
         }
     }
 
-    if (loading) {
+    if (productStatus.includes("pending")) {
         return <LoadingComponent message="Loading product..."/>
     }
 
@@ -116,7 +114,7 @@ export function ProductDetails() {
                     <Grid2 size={6}>
                         <Button
                             disabled={(item?.quantity === quantity) || (!item && quantity === 0)}
-                            loading={status === "pendingRemoveItem" + item?.productId}
+                            loading={status.includes("pending")}
                             onClick={handleUpdateCart}
                             sx={{height: "55px"}}
                             color="primary"

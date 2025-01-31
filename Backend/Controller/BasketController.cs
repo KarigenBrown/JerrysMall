@@ -50,7 +50,10 @@ public class BasketController(StoreContext context) : BackendController
         var basket = await RetrieveBasket();
         if (basket is null)
         {
-            return NoContent();
+            return BadRequest(new ProblemDetails
+            {
+                Title = "Product Not Found"
+            });
         }
 
         basket.RemoveItem(productId, quantity);
