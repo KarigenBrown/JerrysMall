@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controller;
 
-public class ProductsController(StoreContext context) : BackendController
+public class ProductController(StoreContext context) : BackendController
 {
-    [HttpGet]
+    [HttpGet("list")]
     public async Task<ActionResult<PagedList<Product>>> GetProducts([FromQuery] ProductParams productParams)
     {
         var query = context.Products
