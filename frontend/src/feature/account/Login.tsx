@@ -9,24 +9,21 @@ import {
     Typography
 } from "@mui/material";
 import {LockOutlined} from "@mui/icons-material";
-import {Link} from "react-router-dom";
-import {useState} from "react";
-import agent from "../../app/api/agent.ts";
+import {Link, useNavigate} from "react-router-dom";
+import {FieldValues, useForm} from "react-hook-form";
+import {useAppDispatch} from "../../app/store/configureStore.ts";
+import {signInUser} from "./accountSlice.ts";
 
 export default function Login() {
-    const [values, setValues] = useState({
-        username: "",
-        password: ""
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    const {register, handleSubmit, formState: {isSubmitting, errors, isValid}} = useForm({
+        mode: "onTouched"
     })
 
-    function handleSubmit(event: any) {
-        event.preventDefault()
-        agent.Account.login(values)
-    }
-
-    function handleInputChange(event: any) {
-        const {name, value} = event.target
-        setValues({...values, [name]: value})
+    async function submitForm(data: FieldValues) {
+        await dispatch(signInUser(data))
+        navigate("/catalog")
     }
 
     return (
@@ -45,26 +42,37 @@ export default function Login() {
             <Typography component="h1" variant="h5">
                 Sign in
             </Typography>
-            <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
+            <Box
+                component="form"
+                onSubmit={handleSubmit(submitForm)}
+                noValidate sx={{mt: 1}}
+            >
                 <TextField
                     margin="normal"
                     fullWidth
                     label="Username"
-                    name="username"
                     autoFocus
-                    onChange={handleInputChange}
-                    value={values.username}
+                    {...register("username", {required: "Username is required"})}
+                    error={!!errors.username}
+                    helperText={errors?.username?.message as string}
                 />
                 <TextField
                     margin="normal"
                     fullWidth
                     label="Password"
-                    name="password"
                     type="password"
-                    onChange={handleInputChange}
-                    value={values.password}
+                    {...register("password", {required: "Password is required"})}
+                    error={!!errors.password}
+                    helperText={errors?.password?.message as string}
                 />
-                <Button type="submit" fullWidth variant="contained" sx={{mt: 3, mb: 2}}>
+                <Button
+                    disabled={!isValid}
+                    loading={isSubmitting}
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{mt: 3, mb: 2}}
+                >
                     Sign in
                 </Button>
                 <Grid2 container>
