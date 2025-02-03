@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Backend.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20250202122751_IdentityAdded")]
-    partial class IdentityAdded
+    [Migration("20250203002006_Updated")]
+    partial class Updated
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -188,13 +188,13 @@ namespace Backend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c5c213c6-83d6-497c-9801-af96ce3694ad",
+                            Id = "49bdf378-346b-4e0f-9b3a-13d380b6f4df",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         },
                         new
                         {
-                            Id = "a2aeec6d-9b42-443a-874b-cf79342bcb7f",
+                            Id = "13f8597f-4d0f-4b64-82d2-ebf3ca8d87ea",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
