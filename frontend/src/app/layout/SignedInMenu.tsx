@@ -5,6 +5,7 @@ import Fade from '@mui/material/Fade';
 import {useAppDispatch, useAppSelector} from "../store/configureStore.ts";
 import {signOut} from "../../feature/account/accountSlice.ts";
 import React from "react";
+import {clearBasket} from "../../feature/basket/basketSlice.ts";
 
 export default function SignedInMenu() {
     const dispatch = useAppDispatch()
@@ -37,7 +38,10 @@ export default function SignedInMenu() {
             >
                 <MenuItem onClick={handleClose}>Profile</MenuItem>
                 <MenuItem onClick={handleClose}>My orders</MenuItem>
-                <MenuItem onClick={() => dispatch(signOut())}>Logout</MenuItem>
+                <MenuItem onClick={() => {
+                    dispatch(signOut())
+                    dispatch(clearBasket())
+                }}>Logout</MenuItem>
             </Menu>
         </>
     );

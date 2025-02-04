@@ -9,21 +9,26 @@ import {
     Typography
 } from "@mui/material";
 import {LockOutlined} from "@mui/icons-material";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {FieldValues, useForm} from "react-hook-form";
 import {useAppDispatch} from "../../app/store/configureStore.ts";
-import {signInUser} from "./accountSlice.ts";
+import {signInUserAsync} from "./accountSlice.ts";
 
 export default function Login() {
     const navigate = useNavigate()
+    const location = useLocation()
     const dispatch = useAppDispatch()
     const {register, handleSubmit, formState: {isSubmitting, errors, isValid}} = useForm({
         mode: "onTouched"
     })
 
     async function submitForm(data: FieldValues) {
-        await dispatch(signInUser(data))
-        navigate("/catalog")
+        try {
+            await dispatch(signInUserAsync(data))
+            navigate(location.state?.from || "/catalog")
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -77,7 +82,7 @@ export default function Login() {
                 </Button>
                 <Grid2 container>
                     <Grid2>
-                        <Link to="/register">
+                        <Link to="/register" style={{textDecoration: "none"}}>
                             Don't have an account? Sign up
                         </Link>
                     </Grid2>
