@@ -1,5 +1,6 @@
 ﻿using Backend.Domain.Entity;
 using Backend.Domain.Vo;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Extension;
 
@@ -22,5 +23,12 @@ public static class BasketExtension
                 Quantity = item.Quantity
             }).ToList()
         };
+    }
+
+    public static IQueryable<Basket> RetrieveBasketWithItems(this IQueryable<Basket> query, string buyerId)
+    {
+        return query.Include(i => i.Items)
+            .ThenInclude(p => p.Product)
+            .Where(b => b.BuyerId == buyerId);
     }
 }
