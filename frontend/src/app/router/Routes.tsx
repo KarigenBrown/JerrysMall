@@ -8,7 +8,7 @@ import {ContactPage} from "../../feature/contact/ContactPage.tsx";
 import ServerError from "../error/ServerError.tsx";
 import NotFound from "../error/NotFound.tsx";
 import BasketPage from "../../feature/basket/BasketPage.tsx";
-import {CheckoutPage} from "../../feature/checkout/CheckoutPage.tsx";
+import CheckoutPage from "../../feature/checkout/CheckoutPage.tsx";
 import Login from "../../feature/account/Login.tsx";
 import Register from "../../feature/account/Register.tsx";
 import RequiredAuth from "./RequiredAuth.tsx";
@@ -33,6 +33,7 @@ export const router = createBrowserRouter([
             {path: "basket", element: <BasketPage/>},
             {path: "login", element: <Login/>},
             {path: "register", element: <Register/>},
+            {path: "checkout", element: <CheckoutPage/>},
             {path: "*", element: <Navigate replace to="/not-found"/>},
         ]
     }

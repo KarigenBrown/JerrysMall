@@ -2,6 +2,7 @@
 using Backend.Domain.DTO;
 using Backend.Domain.Entity;
 using Backend.Domain.Entity.OrderAggregate;
+using Backend.Domain.VO;
 using Backend.Extension;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,19 +14,19 @@ namespace Backend.Controller;
 public class OrderController(StoreContext context) : BackendController
 {
     [HttpGet]
-    public async Task<ActionResult<List<Order>>> GetOrders()
+    public async Task<ActionResult<List<OrderVo>>> GetOrders()
     {
         return await context.Orders
-            .Include(o => o.OrderItems)
+            .ProjectOrderToOrderVo()
             .Where(x => x.BuyerId == User.Identity.Name)
             .ToListAsync();
     }
 
     [HttpGet("{id:int}", Name = "GetOrder")]
-    public async Task<ActionResult<Order>> GetOrder(int id)
+    public async Task<ActionResult<OrderVo>> GetOrder(int id)
     {
         return await context.Orders
-            .Include(x => x.OrderItems)
+            .ProjectOrderToOrderVo()
             .Where(x => x.BuyerId == User.Identity.Name && x.Id == id)
             .FirstOrDefaultAsync();
     }
