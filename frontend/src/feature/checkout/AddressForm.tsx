@@ -1,6 +1,7 @@
-import {Typography, FormControlLabel, Checkbox, Grid2} from "@mui/material";
+import {Typography, Grid2} from "@mui/material";
 import {useFormContext} from "react-hook-form";
 import AppTextInput from "../../app/component/AppTextInput.tsx";
+import AppCheckbox from "../../app/component/AppCheckbox.tsx";
 
 export default function AddressForm() {
     const {control} = useFormContext()
@@ -33,10 +34,7 @@ export default function AddressForm() {
                     <AppTextInput control={control} name="country" label="Country"/>
                 </Grid2>
                 <Grid2 size={12}>
-                    <FormControlLabel
-                        control={<Checkbox color="secondary" name="saveAddress" value="yes"/>}
-                        label="Use this address for payment details"
-                    />
+                    <AppCheckbox name="saveAddress" label="Save this as the default address" control={control}/>
                 </Grid2>
             </Grid2>
         </>

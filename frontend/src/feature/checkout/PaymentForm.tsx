@@ -1,6 +1,10 @@
 import {Typography, Grid2, TextField, FormControlLabel, Checkbox} from "@mui/material";
+import {useForm} from "react-hook-form";
+import AppTextInput from "../../app/component/AppTextInput.tsx";
 
 export default function PaymentForm() {
+    const {control} = useForm()
+
     return (
         <>
             <Typography variant="h6" gutterBottom>
@@ -8,18 +12,11 @@ export default function PaymentForm() {
             </Typography>
             <Grid2 container spacing={3}>
                 <Grid2 size={{xs: 12, sm: 6}}>
-                    <TextField
-                        required
-                        id="cardName"
-                        label="Name on card"
-                        fullWidth
-                        autoComplete="cc-name"
-                        variant="standard"
-                    />
+                    <AppTextInput label="nameOnCard" name="Name on card" control={control}/>
                 </Grid2>
                 <Grid2 size={{xs: 12, sm: 6}}>
                     <TextField
-                        required
+                        // required
                         id="cardNumber"
                         label="Card number"
                         fullWidth
@@ -29,7 +26,7 @@ export default function PaymentForm() {
                 </Grid2>
                 <Grid2 size={{xs: 12, sm: 6}}>
                     <TextField
-                        required
+                        // required
                         id="expDate"
                         label="Expiry date"
                         fullWidth
@@ -39,7 +36,7 @@ export default function PaymentForm() {
                 </Grid2>
                 <Grid2 size={{xs: 12, sm: 6}}>
                     <TextField
-                        required
+                        // required
                         id="cvv"
                         label="CVV"
                         helperText="Last three digits on signature strip"
