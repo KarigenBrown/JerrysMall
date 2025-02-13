@@ -1,9 +1,9 @@
 import {Typography, Grid2, TextField, FormControlLabel, Checkbox} from "@mui/material";
-import {useForm} from "react-hook-form";
+import {useFormContext} from "react-hook-form";
 import AppTextInput from "../../app/component/AppTextInput.tsx";
 
 export default function PaymentForm() {
-    const {control} = useForm()
+    const {control} = useFormContext()
 
     return (
         <>
@@ -12,7 +12,7 @@ export default function PaymentForm() {
             </Typography>
             <Grid2 container spacing={3}>
                 <Grid2 size={{xs: 12, sm: 6}}>
-                    <AppTextInput label="nameOnCard" name="Name on card" control={control}/>
+                    <AppTextInput control={control} name="nameOnCard" label="Name on card"/>
                 </Grid2>
                 <Grid2 size={{xs: 12, sm: 6}}>
                     <TextField

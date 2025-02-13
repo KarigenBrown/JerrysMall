@@ -27,13 +27,8 @@ export default function CheckoutPage() {
 
     const currentValidationSchema = validationSchema[activeStep]
     const methods = useForm({
-        mode: "all",
-        context: {
-            schema: currentValidationSchema
-        },
-        resolver: async (data, context, options) => {
-            return yupResolver(context.schema)(data, context, options)
-        }
+        mode: "onTouched",
+        resolver: yupResolver(currentValidationSchema)
     })
 
     const handleNext = (data: FieldValues) => {
@@ -75,7 +70,6 @@ export default function CheckoutPage() {
                     ) : (
                         <form onSubmit={methods.handleSubmit(handleNext)}>
                             {getStepContent(activeStep)}
-                            {JSON.stringify(currentValidationSchema)}
                             <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
                                 {activeStep !== 0 && (
                                     <Button onClick={handleBack} sx={{mt: 3, ml: 1}}>
