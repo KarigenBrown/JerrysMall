@@ -2,9 +2,15 @@ import {Paper, Table, TableBody, TableCell, TableContainer, TableRow} from "@mui
 import {currencyFormat} from "../../app/util/util.ts";
 import {useAppSelector} from "../../app/store/configureStore.ts";
 
-export function BasketSummary() {
+interface Props {
+    subtotal?: number
+}
+
+export function BasketSummary({subtotal}: Props) {
     const {basket} = useAppSelector(state => state.basket)
-    const subtotal = basket?.items.reduce((sum, item) => sum + (item.quantity * item.price), 0) ?? 0
+    if (subtotal === undefined) {
+        subtotal = basket?.items.reduce((sum, item) => sum + (item.quantity * item.price), 0) ?? 0
+    }
     const deliveryFee = subtotal > 10000 ? 0 : 500
 
     return (

@@ -90,6 +90,16 @@ public class AccountController(UserManager<User> userManager, TokenService token
         };
     }
 
+    [Authorize]
+    [HttpGet("savedAddress")]
+    public async Task<ActionResult<UserAddress>> GetSavedAddress()
+    {
+        return await userManager.Users
+            .Where(x => x.UserName == User.Identity.Name)
+            .Select(user => user.Address)
+            .FirstOrDefaultAsync();
+    }
+
     private async Task<Basket?> RetrieveBasketAsync(string? buyerId)
     {
         if (string.IsNullOrWhiteSpace(buyerId))

@@ -84,7 +84,9 @@ public class OrderController(StoreContext context) : BackendController
 
         if (orderDto.SaveAddress)
         {
-            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
+            var user = await context.Users
+                .Include(a => a.Address)
+                .FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
             user.Address = new UserAddress
             {
                 FullName = orderDto.ShippingAddress.FullName,
@@ -95,8 +97,6 @@ public class OrderController(StoreContext context) : BackendController
                 Zip = orderDto.ShippingAddress.Zip,
                 Country = orderDto.ShippingAddress.Country
             };
-
-            context.Update(user);
         }
 
         var result = await context.SaveChangesAsync() > 0;
