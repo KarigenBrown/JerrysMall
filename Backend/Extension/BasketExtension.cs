@@ -12,6 +12,8 @@ public static class BasketExtension
         {
             Id = basket.Id,
             BuyerId = basket.BuyerId,
+            PaymentIntentId = basket.PaymentIntentId,
+            ClientSecret = basket.ClientSecret,
             Items = basket.Items.Select(item => new BasketItemVo
             {
                 ProductId = item.ProductId,
