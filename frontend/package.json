@@ -19,14 +19,17 @@
     "@reduxjs/toolkit": "^2.5.0",
     "@stripe/react-stripe-js": "^3.1.1",
     "@stripe/stripe-js": "^5.6.0",
+    "@types/react-slick": "^0.23.13",
     "axios": "^1.7.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.54.2",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.2",
+    "react-slick": "^0.30.3",
     "react-toastify": "^11.0.3",
     "redux": "^5.0.1",
+    "slick-carousel": "^1.8.1",
     "yup": "^1.6.1"
   },
   "devDependencies": {

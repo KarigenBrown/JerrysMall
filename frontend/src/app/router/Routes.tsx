@@ -1,6 +1,5 @@
 import {createBrowserRouter, Navigate} from "react-router-dom";
 import App from "../layout/App.tsx";
-import {HomePage} from "../../feature/home/HomePage.tsx";
 import Catalog from "../../feature/catalog/Catalog.tsx";
 import {ProductDetails} from "../../feature/catalog/ProductDetails.tsx";
 import {AboutPage} from "../../feature/about/AboutPage.tsx";
@@ -26,7 +25,6 @@ export const router = createBrowserRouter([
                     {path: "order", element: <OrderPage/>},
                 ]
             },
-            {path: "", element: <HomePage/>},
             {path: "catalog", element: <Catalog/>},
             {path: "catalog/:id", element: <ProductDetails/>},
             {path: "about", element: <AboutPage/>},
