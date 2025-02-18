@@ -127,7 +127,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseDefaultFiles();
-app.UseStaticFiles();
+// app.UseStaticFiles();
+app.MapStaticAssets();
 
 app.UseCors(opt =>
 {
@@ -143,9 +144,9 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapFallbackToController("Index", "Fallback");
 
-var scope = app.Services.CreateScope();
-var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
-var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+using var scope = app.Services.CreateScope();
+await using var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
+using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 try
 {
@@ -157,4 +158,4 @@ catch (Exception e)
     logger.LogError(e, "A problem occured during migration");
 }
 
-app.Run();
+await app.RunAsync();

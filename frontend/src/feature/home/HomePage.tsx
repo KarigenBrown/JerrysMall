@@ -11,7 +11,7 @@ export function HomePage() {
     };
 
     return (
-        <>
+        <Box sx={{maxWidth: "98%"}}>
             <Slider {...settings}>
                 <div>
                     <img
@@ -52,6 +52,6 @@ export function HomePage() {
                     Welcome to shop!
                 </Typography>
             </Box>
-        </>
+        </Box>
     )
 }

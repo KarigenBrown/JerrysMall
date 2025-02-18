@@ -4,9 +4,7 @@ import {useController, UseControllerProps} from "react-hook-form";
 import {FormControl, FormHelperText, Typography} from "@mui/material";
 import {UploadFile} from "@mui/icons-material";
 
-interface Props extends UseControllerProps {
-
-}
+type Props = UseControllerProps
 
 export default function AppDropzone(props: Props) {
     const {fieldState, field} = useController({...props, defaultValue: null})

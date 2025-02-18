@@ -95,7 +95,7 @@ export default function CheckoutPage() {
                 setPaymentMessage("Thank you - we have received your payment")
                 dispatch(clearBasket())
             } else {
-                setPaymentMessage(paymentResult.error?.message!)
+                setPaymentMessage(paymentResult.error?.message || "Payment Failed")
                 setPaymentSucceeded(false)
             }
             setActiveStep(activeStep + 1)
