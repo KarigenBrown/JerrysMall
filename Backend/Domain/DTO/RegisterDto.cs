@@ -1,7 +1,9 @@
-﻿namespace Backend.Domain.DTO;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class RegisterDto:LoginDto
+namespace Backend.Domain.DTO;
+
+public class RegisterDto : LoginDto
 {
+    [Required]
     public string Email { get; set; }
-    
 }

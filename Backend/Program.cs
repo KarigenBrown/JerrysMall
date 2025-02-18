@@ -1,7 +1,12 @@
 using System.Text;
+using Amazon;
+using Amazon.Extensions.NETCore.Setup;
+using Amazon.Runtime;
+using Amazon.S3;
 using Backend.Config.Db;
 using Backend.Domain.Entity;
 using Backend.Middleware;
+using Backend.Request;
 using Backend.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -38,12 +43,11 @@ else
 
     connectionString = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
 }
-builder.Services.AddDbContext<StoreContext>(opt =>
-{
-    opt.UseNpgsql(connectionString);
-});
+
+builder.Services.AddDbContext<StoreContext>(opt => { opt.UseNpgsql(connectionString); });
 
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
@@ -92,6 +96,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<PaymentService>();
+// builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+// builder.Services.AddAWSService<IAmazonS3>(new AWSOptions
+// {
+//     Region = RegionEndpoint.EUWest2,
+//     DefaultClientConfig = { ServiceURL = "http://localhost:9000" },
+//     Credentials = new BasicAWSCredentials("minioadmin", "minioadmin")
+// });
+builder.Services.AddSingleton<IAmazonS3>(option =>
+{
+    var clientConfig = new AmazonS3Config
+    {
+        AuthenticationRegion = builder.Configuration["AWS:Region"],
+        ServiceURL = builder.Configuration["AWS:ServiceUrl"],
+        ForcePathStyle = true
+    };
+
+    return new AmazonS3Client(builder.Configuration["AWS:AccessKey"], builder.Configuration["AWS:SecretKey"],
+        clientConfig);
+});
 
 var app = builder.Build();
 
