@@ -16,7 +16,7 @@ public class UpdateProductDto
     [Range(100, double.MaxValue)]
     public long Price { get; set; }
 
-    public IFormFile? PictureUrl { get; set; }
+    public IFormFile? File { get; set; }
 
     [Required]
     public string Type { get; set; }

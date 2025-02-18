@@ -1,8 +1,7 @@
 import ProductList from "./ProductList.tsx";
-import {useEffect} from "react";
 import LoadingComponent from "../../app/layout/LoadingComponent.tsx";
 import {useAppDispatch, useAppSelector} from "../../app/store/configureStore.ts";
-import {fetchFilters, fetchProductsAsync, productSelectors, setPageNumber, setProductParams} from "./catalogSlice.ts";
+import {setPageNumber, setProductParams} from "./catalogSlice.ts";
 import {
     Grid2,
     Paper
@@ -11,6 +10,7 @@ import ProductSearch from "./ProductSearch.tsx";
 import RadioButtonGroup from "../../app/component/RadioButtonGroup.tsx";
 import CheckboxButtons from "../../app/component/CheckboxButtons.tsx";
 import AppPagination from "../../app/component/AppPagination.tsx";
+import useProduct from "../../app/hook/useProduct.tsx";
 
 interface SortOption {
     value: string,
@@ -24,28 +24,9 @@ const sortOptions: SortOption[] = [
 ]
 
 export default function Catalog() {
-    const products = useAppSelector(productSelectors.selectAll)
-    const {
-        productsLoaded,
-        filtersLoaded,
-        types,
-        brands,
-        productParams,
-        metaData
-    } = useAppSelector(state => state.catalog)
+    const {products, brands, types, filtersLoaded, metaData} = useProduct()
+    const {productParams} = useAppSelector(state => state.catalog)
     const dispatch = useAppDispatch()
-
-    useEffect(() => {
-        if (!productsLoaded) {
-            dispatch(fetchProductsAsync())
-        }
-    }, [dispatch, productsLoaded])
-
-    useEffect(() => {
-        if (!filtersLoaded) {
-            dispatch(fetchFilters())
-        }
-    }, [dispatch, filtersLoaded]);
 
     if (!filtersLoaded) {
         return <LoadingComponent message="Loading Products..."/>
@@ -83,7 +64,7 @@ export default function Catalog() {
                 <ProductList products={products}/>
             </Grid2>
             <Grid2 size={3}/>
-            <Grid2 size={9} sx={{mb: 2}}>
+            <Grid2 size={9}>
                 {metaData &&
                     <AppPagination
                         metaData={metaData}

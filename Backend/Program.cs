@@ -1,7 +1,4 @@
 using System.Text;
-using Amazon;
-using Amazon.Extensions.NETCore.Setup;
-using Amazon.Runtime;
 using Amazon.S3;
 using Backend.Config.Db;
 using Backend.Domain.Entity;
@@ -115,6 +112,8 @@ builder.Services.AddSingleton<IAmazonS3>(option =>
     return new AmazonS3Client(builder.Configuration["AWS:AccessKey"], builder.Configuration["AWS:SecretKey"],
         clientConfig);
 });
+builder.Services.AddScoped<FileService>();
+builder.Services.AddScoped<ImageService>();
 
 var app = builder.Build();
 

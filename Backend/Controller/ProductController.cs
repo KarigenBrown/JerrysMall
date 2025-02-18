@@ -4,13 +4,14 @@ using Backend.Domain.DTO;
 using Backend.Domain.Entity;
 using Backend.Extension;
 using Backend.Request;
+using Backend.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controller;
 
-public class ProductController(StoreContext context, IMapper mapper) : BackendController
+public class ProductController(StoreContext context, IMapper mapper, ImageService imageService) : BackendController
 {
     [HttpGet("list")]
     public async Task<ActionResult<PagedList<Product>>> GetProducts([FromQuery] ProductParams productParams)
@@ -52,9 +53,25 @@ public class ProductController(StoreContext context, IMapper mapper) : BackendCo
 
     [Authorize(Roles = "Admin")]
     [HttpPost]
-    public async Task<ActionResult<Product>> CreateProduct(CreateProductDto productDto)
+    public async Task<ActionResult<Product>> CreateProduct([FromForm] CreateProductDto productDto)
     {
         var product = mapper.Map<Product>(productDto);
+
+        if (productDto.File is not null)
+        {
+            var imageResult = await imageService.AddImageAsync(productDto.File);
+
+            if (imageResult.Error is not null)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Title = imageResult.Error.Message
+                });
+            }
+
+            product.PictureUrl = imageResult.SecureUrl.ToString();
+            product.PublicId = imageResult.PublicId;
+        }
 
         await context.Products.AddAsync(product);
 
@@ -73,7 +90,7 @@ public class ProductController(StoreContext context, IMapper mapper) : BackendCo
 
     [Authorize(Roles = "Admin")]
     [HttpPut]
-    public async Task<ActionResult> UpdateProduct(UpdateProductDto productDto)
+    public async Task<ActionResult<Product>> UpdateProduct([FromForm] UpdateProductDto productDto)
     {
         var product = await context.Products.FindAsync(productDto.Id);
 
@@ -84,11 +101,32 @@ public class ProductController(StoreContext context, IMapper mapper) : BackendCo
 
         mapper.Map(productDto, product);
 
+        if (productDto.File is not null)
+        {
+            var imageResult = await imageService.AddImageAsync(productDto.File);
+
+            if (imageResult.Error is not null)
+            {
+                return BadRequest(new ProblemDetails
+                {
+                    Title = imageResult.Error.Message
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(product.PublicId))
+            {
+                await imageService.DeleteImageAsync(product.PublicId);
+            }
+
+            product.PictureUrl = imageResult.SecureUrl.ToString();
+            product.PublicId = imageResult.PublicId;
+        }
+
         var result = await context.SaveChangesAsync() > 0;
 
         if (result)
         {
-            return NoContent();
+            return Ok(product);
         }
 
         return BadRequest(new ProblemDetails
@@ -108,10 +146,15 @@ public class ProductController(StoreContext context, IMapper mapper) : BackendCo
             return NotFound();
         }
 
+        if (!string.IsNullOrWhiteSpace(product.PublicId))
+        {
+            await imageService.DeleteImageAsync(product.PublicId);
+        }
+
         context.Products.Remove(product);
-        
+
         var result = await context.SaveChangesAsync() > 0;
-        
+
         if (result)
         {
             return Ok();
