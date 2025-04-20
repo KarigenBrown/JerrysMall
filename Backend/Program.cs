@@ -21,7 +21,9 @@ var builder = WebApplication.CreateBuilder(args);
 // });
 string connectionString;
 if (builder.Environment.IsDevelopment())
+{
     connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+}
 else
 {
     // Use connection string provided at runtime by FlyIO.
@@ -41,7 +43,7 @@ else
     connectionString = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
 }
 
-builder.Services.AddDbContext<StoreContext>(opt => { opt.UseNpgsql(connectionString); });
+builder.Services.AddDbContext<StoreContext>(opt => opt.UseNpgsql(connectionString));
 
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
@@ -68,7 +70,7 @@ builder.Services.AddSwaggerGen(option =>
     option.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
-            jwtSecurityScheme, Array.Empty<string>()
+            jwtSecurityScheme, []
         }
     });
 });
@@ -123,20 +125,18 @@ if (app.Environment.IsDevelopment())
 {
     // app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI(opt => { opt.ConfigObject.AdditionalItems.Add("persistAuthorization", "true"); });
+    app.UseSwaggerUI(opt => opt.ConfigObject.AdditionalItems.Add("persistAuthorization", "true"));
 }
 
 app.UseDefaultFiles();
 // app.UseStaticFiles();
 app.MapStaticAssets();
 
-app.UseCors(opt =>
-{
-    opt.AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials()
-        .WithOrigins("http://localhost:3000");
-});
+app.UseCors(opt => opt.AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowCredentials()
+    .WithOrigins("http://localhost:3000")
+);
 
 app.UseAuthentication();
 app.UseAuthorization();
