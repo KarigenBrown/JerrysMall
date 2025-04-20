@@ -4,6 +4,4 @@ namespace Backend.Controller;
 
 [ApiController]
 [Route("/Backend/[controller]/")]
-public class BackendController : ControllerBase
-{
-}
+public class BackendController : ControllerBase;
