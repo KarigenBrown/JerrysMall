@@ -11,9 +11,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
+/*
+ * 创建项目环节
+ * 1. 使用命令`dotnet new sln -o sln目录`创建solution
+ * 2. 使用命令`dotnet new webapi -o api目录 --use-controllers`创建api项目
+ * 3. 使用命令`dotnet sln add api目录`将api项目加入到sln中
+ *
+ * 特殊文件
+ * 1. `Properties/launchSettings.json`: 启动时的配置
+ * 2. `api目录.csproj`: 依赖以及sdk的设置
+ * 3. `appsettings.Development.json`,`appsettings.json`: 自己编写相应配置,类似spring boot的application.yml
+ */
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// builder的Services这个区域是C#的依赖注入流程,依赖注入容器,在此区域中注入的顺序并不重要
 
 // builder.Services.AddDbContext<StoreContext>(opt =>
 // {
@@ -45,6 +59,7 @@ else
 
 builder.Services.AddDbContext<StoreContext>(opt => opt.UseNpgsql(connectionString));
 
+// 注入所有的Controller
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -117,6 +132,7 @@ builder.Services.AddSingleton<IAmazonS3>(option =>
 builder.Services.AddScoped<FileService>();
 builder.Services.AddScoped<ImageService>();
 
+// app实际使用的功能(使用的middleware),在此区域中函数的调用顺序很重要(middleware的顺序)
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -138,9 +154,12 @@ app.UseCors(opt => opt.AllowAnyHeader()
     .WithOrigins("http://localhost:3000")
 );
 
+// 使用https
+// app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// 映射route到对应的controller和方法
 app.MapControllers();
 app.MapFallbackToController("Index", "Fallback");
 
