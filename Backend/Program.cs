@@ -36,6 +36,14 @@ var builder = WebApplication.CreateBuilder(args);
 string connectionString;
 if (builder.Environment.IsDevelopment())
 {
+    /*
+     * 如果使用sqlite,字符串为`"Data source=文件名"`
+     *
+     * 迁移
+     * 1. 修改entity
+     * 2. 使用命令`dotnet ef migrations add 迁移标签`,创建相应的真实sql代码
+     * 3. 使用命令`dotnet ef database update`,实际执行sql代码
+     */
     connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 }
 else
@@ -57,6 +65,7 @@ else
     connectionString = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
 }
 
+// 将DbContext注入到容器
 builder.Services.AddDbContext<StoreContext>(opt => opt.UseNpgsql(connectionString));
 
 // 注入所有的Controller
@@ -82,6 +91,7 @@ builder.Services.AddSwaggerGen(option =>
     };
 
     option.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+    // 这个类继承了字典,这个语句本质上是一个字典的集合初始化器
     option.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -108,6 +118,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 builder.Services.AddAuthorization();
+/*
+ * Singleton    应用启动时创建一次          整个应用程序周期内复用同一个实例
+ * Scoped       每次请求开始时创建一次       在同一个请求中复用,同请求内同一个实例(一般用这个)
+ * Transient    每次调用时都会创建一个新实例  始终是新建的实例(不推荐使用)
+ */
+// builder.Services.AddTransient<MyType>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<PaymentService>();
 // builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
@@ -163,7 +179,8 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapFallbackToController("Index", "Fallback");
 
-using var scope = app.Services.CreateScope();
+// 创建scope获取容器中的组件
+await using var scope = app.Services.CreateAsyncScope();
 await using var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
 using var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();

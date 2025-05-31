@@ -100,6 +100,13 @@ public class OrderController(StoreContext context) : BackendController
             };
         }
 
+        /*
+         * 如果你在函数中对多个实体(表)进行修改,并只调用一次SaveChanges(),
+         * 那么EF Core会自动创建一个事务,确保所有操作要么全部成功,要么全部失败
+         *
+         * 如果你对多个表修改后,分别调用多次SaveChanges(),
+         * EF Core不会自动把它们放在一个事务中.每次都是单独的事务
+         */
         var result = await context.SaveChangesAsync() > 0;
 
 

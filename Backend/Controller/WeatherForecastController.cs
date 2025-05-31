@@ -27,7 +27,7 @@ public class WeatherForecastController(ILogger<WeatherForecastController> logger
     /*
      * http类型属性: HttpPost, HttpDelete, HttpPut, HttpPatch, HttpGet
      * template是实际的路径,不以/开头时会自动拼接外围路径(相对路径),以/开头时,路径就是这个(绝对路径)
-     * Name是后端用来跳转时候使用的,对前端没有任何作用
+     * Name是后端用来跳转时候使用的,用于CreatedAtRoute方法的routeName
      */
     [HttpGet(Name = "GetWeatherForecast")]
     public IEnumerable<WeatherForecast> Get()

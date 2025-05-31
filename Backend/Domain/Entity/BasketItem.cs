@@ -10,6 +10,7 @@ public class BasketItem
     public int Quantity { get; set; }
 
     // navigation property
+    // 在entity上面的Id会默认作为外键存在
     public int ProductId { get; set; }
     public required Product Product { get; set; }
     public int BasketId { get; set; }

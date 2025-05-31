@@ -78,7 +78,9 @@ export default function CheckoutPage() {
             return
         }
         try {
+            // 付款第二步,收集信用卡信息
             const cardElement = elements.getElement(CardNumberElement)
+            // 付款第三步,实际付款
             const paymentResult = await stripe.confirmCardPayment(basket!.clientSecret!, {
                 payment_method: {
                     card: cardElement!,
@@ -87,6 +89,7 @@ export default function CheckoutPage() {
                     }
                 }
             })
+            // 付款第四步,通过strip服务器的webhook完成自己服务器付款过程
             console.log(paymentResult)
             if (paymentResult.paymentIntent?.status === "succeeded") {
                 const orderNumber = await agent.Order.create({saveAddress, shippingAddress})

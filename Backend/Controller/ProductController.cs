@@ -29,6 +29,7 @@ public class ProductController(StoreContext context, IMapper mapper, ImageServic
         return products;
     }
 
+    // Name是后端用来跳转时候使用的,用于CreatedAtRoute方法的routeName
     [HttpGet("{id:int}", Name = "GetProduct")]
     public async Task<ActionResult<Product>> GetProduct(int id)
     {
@@ -79,6 +80,7 @@ public class ProductController(StoreContext context, IMapper mapper, ImageServic
 
         if (result)
         {
+            // Name是后端用来跳转时候使用的,用于CreatedAtRoute方法的routeName
             return CreatedAtRoute("GetProduct", new { Id = product.Id }, product);
         }
 

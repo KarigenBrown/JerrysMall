@@ -14,6 +14,7 @@ export default function CheckoutWrapper() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
+        // 付款第一步,创建payment intent
         agent.Payment.createPaymentIntent()
             .then(basket => dispatch(setBasket(basket)))
             .catch(error => console.log(error))
