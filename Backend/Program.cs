@@ -101,10 +101,14 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 builder.Services.AddCors();
+
+// 用户角色相关的设置,主要是数据库相关的
 builder.Services.AddIdentityCore<User>(opt => { opt.User.RequireUniqueEmail = true; })
     .AddRoles<Role>()
     .AddEntityFrameworkStores<StoreContext>();
+// 验证
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    // 该规则适用于校验,TokenService负责颁发,两个的设置必须一致
     .AddJwtBearer(opt =>
     {
         opt.TokenValidationParameters = new TokenValidationParameters
@@ -117,6 +121,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
         };
     });
+// 授权
 builder.Services.AddAuthorization();
 /*
  * Singleton    应用启动时创建一次          整个应用程序周期内复用同一个实例

@@ -15,6 +15,7 @@ public static class DbInitializer
                 Email = "bob@test.com"
             };
 
+            // userManager会自动save
             await userManager.CreateAsync(user, "Pa$$w0rd");
             await userManager.AddToRoleAsync(user, "Member");
 
