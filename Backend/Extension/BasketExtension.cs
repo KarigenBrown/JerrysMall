@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Extension;
 
+// Extension要求类和方法都用statics修饰,并且第一个方法参数要用this修饰
 public static class BasketExtension
 {
     public static BasketVo MapBasketToVo(this Basket basket)

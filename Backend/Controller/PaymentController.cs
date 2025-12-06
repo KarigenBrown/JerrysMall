@@ -16,6 +16,7 @@ public class PaymentController(PaymentService paymentService, StoreContext conte
     [HttpPost]
     [HttpPut]
     [Authorize]
+    // 付款第一步,创建payment intent
     public async Task<ActionResult<BasketVo>> CreateOrUpdatePaymentIntent()
     {
         var basket = await context.Baskets
@@ -57,6 +58,7 @@ public class PaymentController(PaymentService paymentService, StoreContext conte
 
     [HttpPost("webhook")]
     [HttpPut("status")]
+    // 付款第四步,通过strip服务器的webhook完成自己服务器付款过程
     public async Task<ActionResult> StripeWebhook()
     {
         var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
