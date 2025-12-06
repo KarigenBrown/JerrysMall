@@ -16,7 +16,8 @@ public class AccountController(UserManager<User> userManager, TokenService token
 {
     private const string BuyerId = "buyerId";
 
-    [HttpPost("login")]
+    [HttpPost("login")] // 相对路由
+    // [HttpPost("/login")] // 绝对路由
     public async Task<ActionResult<UserVo>> Login(LoginDto loginDto)
     {
         var user = await userManager.FindByNameAsync(loginDto.Username);

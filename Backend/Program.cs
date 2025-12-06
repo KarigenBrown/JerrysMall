@@ -94,9 +94,14 @@ builder.Services.AddSwaggerGen(option =>
     // 这个类继承了字典,这个语句本质上是一个字典的集合初始化器
     option.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
+        // {
+        //     key, value
+        // },
         {
-            jwtSecurityScheme, []
-        }
+            /* key */ jwtSecurityScheme, /* value */ []
+        },
+        // [key] = value,
+        // [ /* key */ jwtSecurityScheme] = /* value */ [],
     });
 });
 
